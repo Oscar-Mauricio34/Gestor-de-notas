@@ -1,66 +1,61 @@
-cursos = []
 
+
+cursos = []             # Lista de cursos registrados
+historial = []          # Pila (últimos cambios)
+cola_revisiones = []    # Cola (solicitudes de revisión)
+
+#MENÚ PRINCIPAL
 def mostrar_menu():
-    print("##### GESTOR DE NOTAS ACADEMICA####")
-    print("1.Registrar Nuevo Curso")
-    print ("2.Calcular Promedio General")
-    print ("3.Contar Cursos aprobados y Reprobados")
-    print("4.Buscar Curso Por Nombre (Busqueda Lineal)")
-    print ("5.Actualizar Curso Notas De Un Curso")
-    print ("6.Eliminar Un Curso")
-    print ("7.Ordenar Curso Por Notas(Ordenamiento Burbuja)")
-    print("8.Ordenar Cursos Por Nombre (Ordenamiento insercion)")
-    print ("9.Buscar curso Por Nombre(Busqueda Binaria)")
-    print ("10.Simular Cola De Solicitudes De Revision")
-    print ("11.Mostrar Historial De Cambios (Pila)")
-    print ("12.Salir")
+    print("\n##### GESTOR DE NOTAS ACADÉMICAS #####")
+    print("1. Registrar nuevo curso")
+    print("2. Calcular promedio general")
+    print("3. Contar cursos aprobados y reprobados")
+    print("4. Buscar curso por nombre (búsqueda lineal)")
+    print("5. Actualizar nota de un curso")
+    print("6. Eliminar un curso")
+    print("7. Ordenar cursos por nota (burbuja)")
+    print("8. Ordenar cursos por nombre (inserción)")
+    print("9. Buscar curso (búsqueda binaria)")
+    print("10. Simular cola de solicitudes de revisión")
+    print("11. Mostrar historial de cambios (pila)")
+    print("12. Salir")
 
+#FUNCIÓN PARA LEER OPCIÓN 
 def leer_opcion():
     while True:
         valor = input("Seleccione una opción: ").strip()
         if valor == "":
-            print(" Debe ingresar una opción.")
+            print("Debe ingresar una opción.")
             continue
         try:
             return int(valor)
         except ValueError:
-            print(" Opción inválida. Ingrese un número.")
+            print("Opción inválida. Ingrese un número.")
 
-def ejecutar_opcion(opcion):
-    if opcion == 1:
-        print("Has elegido: Registrar nuevo curso (pendiente)")
-    elif opcion == 2:
-        print("Has elegido: Mostrar todos los cursos (pendiente)")
-    elif opcion == 3:
-        print("Has elegido: Calcular promedio (pendiente)")
-    elif opcion == 4:
-        print("Has elegido: Contar aprobados/reprobados (pendiente)")
-    elif opcion == 5:
-        print("Gracias por usar el Gestor. ¡Adiós!")
-        return False   # señal para salir del bucle
-    else:
-        print(" Opción no válida.")
-    return True        # continuar el bucle
+#REGISTRAR NUEVO CURSO
 def registrar_curso():
     nombre = input("Ingrese el nombre del curso: ").strip()
     try:
         nota = float(input("Ingrese la nota del curso (0-100): "))
+        if nota < 0 or nota > 100:
+            print("La nota debe estar entre 0 y 100.")
+            return
     except ValueError:
         print("Error: la nota debe ser numérica.")
         return
     cursos.append({"nombre": nombre, "nota": nota})
     print("Curso registrado con éxito.")
+    historial.append(f"Registrado curso '{nombre}' con nota {nota}.")
 
-
+#CALCULAR PROMEDIO GENERAL
 def calcular_promedio():
     if not cursos:
         print("No hay cursos registrados.")
         return
-    suma = sum(c["nota"] for c in cursos)
-    promedio = suma / len(cursos)
+    promedio = sum(c["nota"] for c in cursos) / len(cursos)
     print(f"El promedio general es: {promedio:.2f}")
 
-
+#CONTAR APROBADOS Y REPROBADOS
 def contar_aprobados_reprobados():
     if not cursos:
         print("No hay cursos registrados.")
@@ -69,7 +64,7 @@ def contar_aprobados_reprobados():
     reprobados = len(cursos) - aprobados
     print(f"Aprobados: {aprobados}, Reprobados: {reprobados}")
 
-
+#BÚSQUEDA LINEAL
 def buscar_curso_lineal():
     if not cursos:
         print("No hay cursos registrados.")
@@ -81,7 +76,7 @@ def buscar_curso_lineal():
             return
     print("Curso no encontrado.")
 
-
+#ACTUALIZAR NOTA
 def actualizar_curso():
     if not cursos:
         print("No hay cursos registrados.")
@@ -91,6 +86,7 @@ def actualizar_curso():
         if curso["nombre"].lower() == nombre.lower():
             try:
                 nueva_nota = float(input("Ingrese la nueva nota: "))
+                historial.append(f"Actualizada nota de '{nombre}' de {curso['nota']} a {nueva_nota}.")
                 curso["nota"] = nueva_nota
                 print("Nota actualizada con éxito.")
                 return
@@ -99,6 +95,83 @@ def actualizar_curso():
                 return
     print("Curso no encontrado.")
 
+#ELIMINAR CURSO
+def eliminar_curso():
+    if not cursos:
+        print("No hay cursos registrados.")
+        return
+    nombre = input("Ingrese el nombre del curso a eliminar: ").strip()
+    for curso in cursos:
+        if curso["nombre"].lower() == nombre.lower():
+            cursos.remove(curso)
+            historial.append(f"Eliminado curso '{nombre}'.")
+            print("Curso eliminado con éxito.")
+            return
+    print("Curso no encontrado.")
+
+#ORDENAMIENTO BURBUJA (POR NOTA)
+def ordenar_por_nota_burbuja():
+    n = len(cursos)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if cursos[j]["nota"] > cursos[j + 1]["nota"]:
+                cursos[j], cursos[j + 1] = cursos[j + 1], cursos[j]
+    print("Cursos ordenados por nota (Burbuja).")
+
+#ORDENAMIENTO INSERCIÓN (POR NOMBRE)
+def ordenar_por_nombre_insercion():
+    for i in range(1, len(cursos)):
+        actual = cursos[i]
+        j = i - 1
+        while j >= 0 and cursos[j]["nombre"].lower() > actual["nombre"].lower():
+            cursos[j + 1] = cursos[j]
+            j -= 1
+        cursos[j + 1] = actual
+    print("Cursos ordenados por nombre (Inserción).")
+
+#COLA DE SOLICITUDES DE REVISIÓN
+def simular_cola_revisiones():
+    while True:
+        print("\n--- COLA DE REVISIÓN ---")
+        print("1. Agregar solicitud")
+        print("2. Atender solicitud")
+        print("3. Mostrar cola actual")
+        print("4. Regresar al menú principal")
+
+        opcion = input("Seleccione una opción: ").strip()
+        if opcion == "1":
+            nombre = input("Ingrese el curso para revisión: ").strip()
+            cola_revisiones.append(nombre)
+            print(f"Solicitud agregada: {nombre}")
+        elif opcion == "2":
+            if cola_revisiones:
+                atendido = cola_revisiones.pop(0)
+                print(f"Solicitud atendida: {atendido}")
+                historial.append(f"Revisado curso '{atendido}'.")
+            else:
+                print("No hay solicitudes en cola.")
+        elif opcion == "3":
+            if cola_revisiones:
+                print("Solicitudes pendientes:")
+                for s in cola_revisiones:
+                    print(f"- {s}")
+            else:
+                print("No hay solicitudes en cola.")
+        elif opcion == "4":
+            break
+        else:
+            print("Opción inválida.")
+
+#MOSTRAR HISTORIAL (PILA)
+def mostrar_historial():
+    if not historial:
+        print("No hay acciones en el historial.")
+    else:
+        print("\n--- HISTORIAL DE CAMBIOS ---")
+        for accion in reversed(historial):
+            print(accion)
+
+#CONTROLADOR PRINCIPAL
 def ejecutar_opcion(opcion):
     if opcion == 1:
         registrar_curso()
@@ -110,15 +183,29 @@ def ejecutar_opcion(opcion):
         buscar_curso_lineal()
     elif opcion == 5:
         actualizar_curso()
+    elif opcion == 6:
+        eliminar_curso()
+    elif opcion == 7:
+        ordenar_por_nota_burbuja()
+    elif opcion == 8:
+        ordenar_por_nombre_insercion()
+    elif opcion == 10:
+        simular_cola_revisiones()
+    elif opcion == 11:
+        mostrar_historial()
     elif opcion == 12:
         print("Gracias por usar el Gestor. ¡Adiós!")
         return False
+    else:
+        print("Opción no válida.")
+    return True
 
+#PROGRAMA PRINCIPAL
 def main():
     seguir = True
-    while seguir:               # MIENTRAS ... HACER
-        mostrar_menu()          # IMPRIMIR opciones
-        opcion = leer_opcion()  # LEER opción validada
+    while seguir:
+        mostrar_menu()
+        opcion = leer_opcion()
         seguir = ejecutar_opcion(opcion)
 
 if __name__ == "__main__":
