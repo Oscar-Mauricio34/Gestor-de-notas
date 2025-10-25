@@ -1,0 +1,161 @@
+
+cursos = []
+
+def mostrar_menu():
+    print("##### GESTOR DE NOTAS ACADEMICA####")
+    print("1.Registrar Nuevo Curso")
+    print ("2.Calcular Promedio General")
+    print ("3.Contar Cursos aprobados y Reprobados")
+    print("4.Buscar Curso Por Nombre (Busqueda Lineal)")
+    print ("5.Actualizar Curso Notas De Un Curso")
+    print ("6.Eliminar Un Curso")
+    print ("7.Ordenar Curso Por Notas(Ordenamiento Burbuja)")
+    print("8.Ordenar Cursos Por Nombre (Ordenamiento insercion)")
+    print ("9.Buscar curso Por Nombre(Busqueda Binaria)")
+    print ("10.Simular Cola De Solicitudes De Revision")
+    print ("11.Mostrar Historial De Cambios (Pila)")
+    print ("12.Salir")
+
+def leer_opcion():
+    while True:
+        valor = input("Seleccione una opción: ").strip()
+        if valor == "":
+            print(" Debe ingresar una opción.")
+            continue
+        try:
+            return int(valor)
+        except ValueError:
+            print(" Opción inválida. Ingrese un número.")
+
+def ejecutar_opcion(opcion):
+    if opcion == 1:
+        print("Has elegido: Registrar nuevo curso (pendiente)")
+    elif opcion == 2:
+        print("Has elegido: Mostrar todos los cursos (pendiente)")
+    elif opcion == 3:
+        print("Has elegido: Calcular promedio (pendiente)")
+    elif opcion == 4:
+        print("Has elegido: Contar aprobados/reprobados (pendiente)")
+    elif opcion == 5:
+        print("Gracias por usar el Gestor. ¡Adiós!")
+        return False   # señal para salir del bucle
+    else:
+        print(" Opción no válida.")
+    return True        # continuar el bucle
+def registrar_curso():
+    nombre = input("Ingrese el nombre del curso: ").strip()
+    try:
+        nota = float(input("Ingrese la nota del curso (0-100): "))
+    except ValueError:
+        print("Error: la nota debe ser numérica.")
+        return
+    cursos.append({"nombre": nombre, "nota": nota})
+    print("Curso registrado con éxito.")
+
+
+def calcular_promedio():
+    if not cursos:
+        print("No hay cursos registrados.")
+        return
+    suma = sum(c["nota"] for c in cursos)
+    promedio = suma / len(cursos)
+    print(f"El promedio general es: {promedio:.2f}")
+
+
+def contar_aprobados_reprobados():
+    if not cursos:
+        print("No hay cursos registrados.")
+        return
+    aprobados = sum(1 for c in cursos if c["nota"] >= 60)
+    reprobados = len(cursos) - aprobados
+    print(f"Aprobados: {aprobados}, Reprobados: {reprobados}")
+
+
+def buscar_curso_lineal():
+    if not cursos:
+        print("No hay cursos registrados.")
+        return
+    nombre = input("Ingrese el nombre del curso a buscar: ").strip()
+    for curso in cursos:
+        if curso["nombre"].lower() == nombre.lower():
+            print(f"Curso encontrado: {curso['nombre']} con nota {curso['nota']}")
+            return
+    print("Curso no encontrado.")
+
+
+def actualizar_curso():
+    if not cursos:
+        print("No hay cursos registrados.")
+        return
+    nombre = input("Ingrese el nombre del curso a actualizar: ").strip()
+    for curso in cursos:
+        if curso["nombre"].lower() == nombre.lower():
+            try:
+                nueva_nota = float(input("Ingrese la nueva nota: "))
+                curso["nota"] = nueva_nota
+                print("Nota actualizada con éxito.")
+                return
+            except ValueError:
+                print("Error: la nota debe ser numérica.")
+                return
+    print("Curso no encontrado.")
+
+def ejecutar_opcion(opcion):
+    if opcion == 1:
+        registrar_curso()
+    elif opcion == 2:
+        calcular_promedio()
+    elif opcion == 3:
+        contar_aprobados_reprobados()
+    elif opcion == 4:
+        buscar_curso_lineal()
+    elif opcion == 5:
+        actualizar_curso()
+    elif opcion == 12:
+        print("Gracias por usar el Gestor. ¡Adiós!")
+        return False
+
+def main():
+    seguir = True
+    while seguir:               # MIENTRAS ... HACER
+        mostrar_menu()          # IMPRIMIR opciones
+        opcion = leer_opcion()  # LEER opción validada
+        seguir = ejecutar_opcion(opcion)
+
+if __name__ == "__main__":
+    main()
+=======
+INICIO
+
+    
+    notas = []            # Lista para guardar las notas
+    sumaNotas = 0         # Acumulador de notas
+    contador = 0          # Contador de notas
+    
+    # Entrada de datos
+    ESCRIBIR "Ingrese una nota (o -1 para terminar): "
+    LEER nota
+    
+    MIENTRAS nota <> -1 HACER
+        SI nota >= 0 Y nota <= 100 ENTONCES
+            notas[contador] = nota      # Guardar la nota
+            sumaNotas ← sumaNotas + nota
+            contador ← contador + 1
+        SINO
+            ESCRIBIR "Nota inválida, ingrese un valor entre 0 y 100."
+        FIN_SI
+        
+        ESCRIBIR "Ingrese otra nota (o -1 para terminar): "
+        LEER nota
+    FIN_MIENTRAS
+    
+    # Calcular y mostrar resultados
+    SI contador > 0 ENTONCES
+        promedio = sumaNotas / contador
+        ESCRIBIR "Se ingresaron ", contador, " notas."
+        ESCRIBIR "El promedio de notas es: ", promedio
+    SINO
+        ESCRIBIR "No se ingresaron notas válidas."
+    FIN_SI
+FIN
+
